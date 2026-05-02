@@ -26,7 +26,7 @@ make down
 
 ## 🌐 Access the website
 
-https://login.42.fr
+https://aisaev.42.fr
 
 ---
 

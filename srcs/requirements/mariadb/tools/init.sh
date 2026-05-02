@@ -24,4 +24,4 @@ EOF
 mysqladmin -u root -p"${MYSQL_ROOT_PASSWORD}" shutdown
 
 # Run MariaDB in foreground (PID 1 - right for Docker)
-exec mysgld_safe
+exec mysqld_safe
