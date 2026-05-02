@@ -2,18 +2,19 @@
 FROM debian:bookworm
 
 RUN apt-get update && apt-get install -y \
-    php-fpm php-mysql curl \
+    php8.2-fpm php8.2-mysql curl mariadb-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Ставим wp-cli (удобно для автоматической настройки)
+# УБИРАЕМ COPY www.conf ❌
+
+# Прямо правим конфиг через sed ✅
+RUN sed -i 's|listen = .*|listen = 0.0.0.0:9000|' /etc/php/8.2/fpm/pool.d/www.conf
+
+# wp-cli
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x wp-cli.phar \
     && mv wp-cli.phar /usr/local/bin/wp
 
-# Конфиг php-fpm
-COPY conf/www.conf /etc/php/*/fpm/pool.d/www.conf
-
-# Init-скрипт
 COPY tools/init.sh /usr/local/bin/init.sh
 RUN chmod +x /usr/local/bin/init.sh
 

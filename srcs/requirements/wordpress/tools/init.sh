@@ -3,9 +3,15 @@ set -e
 
 # Wait for MariaDB
 echo "Waiting for MariaDB..."
-until mysqladmin ping -h "mariadb" --silent; do
+echo "Waiting for MariaDB..."
+until mysqladmin ping -h "mariadb" -u $MYSQL_USER -p$MYSQL_PASSWORD --silent; do
+    echo "MariaDB not ready yet..."
     sleep 2
 done
+echo "MariaDB is ready!"
+
+mkdir -p /var/www/html
+cd /var/www/html
 
 # If wp-config.php doesn't exist → conf WordPress
 if [ ! -f /var/www/html/wp-config.php ]; then
@@ -34,5 +40,9 @@ if [ ! -f /var/www/html/wp-config.php ]; then
         --allow-root
 fi
 
+
+chown -R www-data:www-data /var/www/html
+chmod -R 755 /var/www/html
+
 # Run php-fpm
-exec php-fpm -F
+exec php-fpm8.2 -F
